@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html >
+	<head>
+		<meta charset="UTF-8">
+		<title>2048 game</title>
+		<link rel="stylesheet" href="css/style.css">
+	</head>
+
+	<body>
+	<div class="container">
+		<div class="innerContainer">
+			<div class="heading">
+				<h1 class="title">2048</h1>
+				<div class="score-container highscore">0</div>
+				<div class="score-container score">0</div>
+				<div class="score-container moves">0</div>
+			</div>
+
+			<div class="game-container">
+				<div class="game-message">
+					<p></p>
+					<div class="lower">
+						<a class="retry-button">Try again</a>
+					</div>
+				</div>
+
+				<div class="grid-container">
+					<div class="grid-row">
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+					</div>
+					<div class="grid-row">
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+					</div>
+					<div class="grid-row">
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+					</div>
+					<div class="grid-row">
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+					</div>
+				</div>
+
+				<div class="tile-container"></div>
+			</div>
+
+			<p class="game-explanation">
+				<strong class="important">How to play:</strong> Use <code>!up</code>, <code>!down</code>, <code>!left</code> and <code>!right</code> to move all tiles in the respective direction. When two tiles with the same number touch, they <strong>merge into one!</strong>
+			</p>
+		</div>
+		
+		<!--
+			&#8678; - left
+			&#8680; - right
+			&#8679; - up
+			&#8681; - down
+		-->
+		
+		<div id="chatContainer">
+			<div id="gameChat">
+				<table id="chatLog"></table>
+			</div>
+		</div>
+	</div>
+
+	<script src='http://cdnjs.cloudflare.com/ajax/libs/hammer.js/1.0.6/hammer.min.js'></script>
+
+	<script src="js/index.js"></script>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		
+		var socket = io();
+
+		socket.on("move", function(data) {
+			window.manager.move(data.move);
+			
+			var moveUni;
+
+			switch (data.move) {
+				case 0:
+					moveUni = "&#8679;";
+					break;
+				case 1:
+					moveUni = "&#8680;";
+					break;
+				case 2:
+					moveUni = "&#8681;";
+					break;
+				case 3:
+					moveUni = "&#8678;";
+					break;
+			}
+
+			var newChatElem = "<tr><td class=\"moveMade\">" + moveUni + "</td><td style=\"color: " + data.colour + ";\" class=\"username\">" + data.user + "</td></tr>";
+			var oldHTML = document.getElementById("chatLog").innerHTML;
+			document.getElementById("chatLog").innerHTML = newChatElem + oldHTML;
+		});
+
+	</script>
+
+	</body>
+</html>
